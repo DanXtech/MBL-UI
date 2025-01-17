@@ -34,7 +34,7 @@ const Login = () => {
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
             }}
-            className="h-screen w-full bg-black relative"
+            className="min-h-screen w-full bg-black relative"
         >
             {/* Overlay for deep black effect */}
             <div className="absolute inset-0 bg-[#1B1B2E] bg-opacity-90"></div>
