@@ -1,7 +1,6 @@
 import AuthImage from "../../assets/Red-and-Black-Monogram-Sports-Baseball-Club-Logo.png";
 import Button from "../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
-
 import { useAuth } from "../../context/authContext";
 import { useEffect } from "react";
 
@@ -31,13 +30,13 @@ const Signup = () => {
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
             }}
-            className="h-screen w-full bg-black relative"
+            className="min-h-screen w-full bg-black relative"
         >
             {/* Overlay for deep black effect */}
             <div className="absolute inset-0 bg-[#1B1B2E] bg-opacity-90"></div>
 
             {/* Content */}
-            <div className="relative z-10 h-full flex flex-col justify-center items-center p-4 lg:p-10 text-white">
+            <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-4 lg:px-10 text-white">
                 <h2 className="text-xl mb-4 text-center lg:text-3xl lg:mb-8 font-black uppercase">
                     Start your journey with baseball gaming championship
                 </h2>
@@ -53,7 +52,7 @@ const Signup = () => {
                         </div>
 
                         {/* Form Fields */}
-                        <div className="flex flex-col gap-4 h-[350px] lg:h-full scrollbar-none overflow-y-auto">
+                        <div className="flex flex-col gap-4 max-h-[60vh] lg:max-h-full scrollbar-none overflow-y-auto">
                             <div className="flex flex-col lg:flex-row gap-2">
                                 <input
                                     type="text"
@@ -119,7 +118,7 @@ const Signup = () => {
 
                             <button
                                 onClick={handleGoogleSignIn}
-                                className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg"
+                                className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg w-full"
                             >
                                 Sign in with Google Account
                             </button>
