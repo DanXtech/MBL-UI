@@ -6,7 +6,6 @@ import { useAuth } from "../../context/authContext";
 import { useEffect } from "react";
 
 const Signup = () => {
-
     const { signInWithGoogle, user } = useAuth();
     const navigate = useNavigate();
 
@@ -19,14 +18,12 @@ const Signup = () => {
     const handleGoogleSignIn = async () => {
         try {
             await signInWithGoogle();
-            // Navigation will be handled by the useEffect above
         } catch (error) {
             console.error("Error signing in with Google:", error.message);
         }
     };
 
     return (
-
         <div
             style={{
                 backgroundImage: `url(${AuthImage})`,
@@ -56,7 +53,7 @@ const Signup = () => {
                         </div>
 
                         {/* Form Fields */}
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 h-[350px] lg:h-full scrollbar-none overflow-y-auto">
                             <div className="flex flex-col lg:flex-row gap-2">
                                 <input
                                     type="text"
@@ -131,8 +128,6 @@ const Signup = () => {
                 </div>
             </div>
         </div>
-
-
     );
 };
 
