@@ -52,7 +52,7 @@ const Login = () => {
       <div className="absolute inset-0 bg-[#1B1B2E] bg-opacity-90"></div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-center items-center p-4 lg:p-10 text-white">
+      <div className="relative z-10 h-full flex flex-col justify-center items-center p-4 lg:p-10 text-white  py-5 lg:py-10">
         <h2 className="text-xl mb-4 text-center lg:text-3xl lg:mb-8 font-black uppercase">
           Continue Playing Baseball Gaming Championship
         </h2>
