@@ -56,7 +56,7 @@ const Login = () => {
                         </div>
 
                         {/* Form Fields */}
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 h-[350px] lg:h-full scrollbar-none overflow-y-auto">
                             <div className="flex flex-col lg:flex-row gap-2">
                                 <input
                                     type="email"
