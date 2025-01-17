@@ -36,7 +36,7 @@ const Signup = () => {
             <div className="absolute inset-0 bg-[#1B1B2E] bg-opacity-90"></div>
 
             {/* Content */}
-            <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-4 lg:px-10 text-white">
+            <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-4 lg:px-10 text-white py-5 lg:py-10">
                 <h2 className="text-xl mb-4 text-center lg:text-3xl lg:mb-8 font-black uppercase">
                     Start your journey with baseball gaming championship
                 </h2>
