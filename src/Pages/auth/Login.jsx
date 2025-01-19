@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import { useEffect } from "react";
 
-const Signup = () => {
+const Login = () => {
     const { signInWithGoogle, user } = useAuth();
     const navigate = useNavigate();
 
@@ -130,4 +130,4 @@ const Signup = () => {
     );
 };
 
-export default Signup;
+export default Login;
