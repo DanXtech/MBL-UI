@@ -1,51 +1,189 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/authContext";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../assets/logo1.png"
+import Logo from "../assets/logo1.png";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import NativeSelect from "@mui/material/NativeSelect";
+import { FaBaseballBall } from "react-icons/fa";
+
 const GameSection = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [colorIndex, setColorIndex] = useState(0);
+
+    const colors = ["#22c55e", "#3b82f6", "#eab308", "#ef4444", "#a855f7", "#f97316"];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setColorIndex((prev) => (prev + 1) % colors.length);
+        }, 1000); // Change color every second
+
+        return () => clearInterval(interval);
+    }, [colors.length]);
+
+
+    const [team, setTeam] = useState("");
+    const [player, setPlayer] = useState("");
+    const [language, setLanguage] = useState("");
 
     const handleLogout = async () => {
         try {
             await logout();
-            navigate('/');
+            navigate("/");
         } catch (error) {
             console.error("Error logging out:", error.message);
         }
     };
+
+
+
     return (
-        <div className="game-section">
-
-            {/* header section */}
-            <div className="flex items-center justify-between px-3 lg:px-5 py-4 bg-n-8/90 backdrop-blur-sm border-b">
-                <div>
-
-                    <Link to="/"> <img src={Logo} className='lg:w-24 w-24' alt="" /></Link>
-                </div>
-                <div className="flex items-center gap-2 inset-0 bg-[#1B1B2E] bg-opacity-90 px-3 py-1 rounded-full">
-                    <img className="rounded-full w-10" src={user?.photoURL} alt="Profile" />
-
+        <div className="game-section min-h-screen bg-gray-100">
+            {/* Header Section */}
+            <header className="flex items-center justify-between px-5 py-3 lg:py-0 bg-gray-900 text-white">
+                <Link to="/">
+                    <img src={Logo} className="lg:w-28 w-20" alt="Logo" />
+                </Link>
+                <div className="flex items-center gap-3">
+                    <img
+                        className="rounded-full w-10 h-10 object-cover"
+                        src={user?.photoURL || "https://via.placeholder.com/40"}
+                        alt="Profile"
+                    />
                     {user ? (
-                        <button onClick={handleLogout}>Logout</button>
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300"
+                        >
+                            Logout
+                        </button>
                     ) : (
-                        <button onClick={() => navigate("/login")}>Login</button>
+                        <button
+                            onClick={() => navigate("/login")}
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
+                        >
+                            Login
+                        </button>
                     )}
                 </div>
-            </div>
+            </header>
 
+            {/* Main Section */}
+            <main className="flex flex-col items-center py-5 lg:py-16 px-4 relative">
+                <h1 className="text-2xl lg:text-4xl font-semibold text-gray-800 mb-4 text-center">
+                    Welcome back, {user?.displayName || "Guest"}!
+                </h1>
+                <h2 className="text-xl text-gray-600 mb-5 lg:mb-8 text-center">
+                    Select your options to start playing your games
+                </h2>
 
-            {/* subsection */}
-            <div className="flex items-center justify-center flex-col py-10">
-                <div>
-                    <h1 className="text-3xl">Welcome back {user?.displayName || "Guest"} !</h1>
+                {/* Card Section */}
+                <div className="w-full max-w-4xl p-6 bg-white rounded-xl shadow-lg">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Favorite Teams */}
+                        <Box sx={{ m: 1, width: "100%" }}>
+                            <FormControl fullWidth>
+                                <InputLabel variant="standard" htmlFor="team-native">
+                                    Select favorite teams
+                                </InputLabel>
+                                <NativeSelect
+                                    value={team}
+                                    onChange={(e) => setTeam(e.target.value)}
+                                    inputProps={{
+                                        name: "team",
+                                        id: "team-native",
+                                        "aria-label": "Select favorite teams",
+                                    }}
+
+                                >
+                                    <option value="" disabled>
+                                        Select favorite teams
+                                    </option>
+                                    <option value="Kevin De Bruyne">Kevin De Bruyne</option>
+                                    <option value="Rodri">Rodri</option>
+                                    <option value="Erling Haaland">Erling Haaland</option>
+                                    <option value="Mohamed Salah">Mohamed Salah</option>
+                                    <option value="Aaron Judge">Aaron Judge</option>
+                                </NativeSelect>
+                            </FormControl>
+                        </Box>
+
+                        {/* Favorite Players */}
+                        <Box sx={{ m: 1, width: "100%" }}>
+                            <FormControl fullWidth>
+                                <InputLabel variant="standard" htmlFor="player-native">
+                                    Select favorite players
+                                </InputLabel>
+                                <NativeSelect
+                                    value={player}
+                                    onChange={(e) => setPlayer(e.target.value)}
+                                    inputProps={{
+                                        name: "player",
+                                        id: "player-native",
+                                        "aria-label": "Select favorite players",
+                                    }}
+                                >
+                                    <option value="" disabled>
+                                        Select favorite players
+                                    </option>
+                                    <option value="Player 1">Player 1</option>
+                                    <option value="Player 2">Player 2</option>
+                                    <option value="Player 3">Player 3</option>
+                                    <option value="Player 4">Player 4</option>
+                                    <option value="Player 5">Player 5</option>
+                                </NativeSelect>
+                            </FormControl>
+                        </Box>
+
+                        {/* Language */}
+                        <Box sx={{ m: 1, width: "100%" }}>
+                            <FormControl fullWidth>
+                                <InputLabel variant="standard" htmlFor="language-native">
+                                    Select a language
+                                </InputLabel>
+                                <NativeSelect
+                                    value={language}
+                                    onChange={(e) => setLanguage(e.target.value)}
+                                    inputProps={{
+                                        name: "language",
+                                        id: "language-native",
+                                        "aria-label": "Select a Language",
+                                    }}
+                                >
+                                    <option value="" disabled>
+                                        Select a language
+                                    </option>
+                                    <option value="English">English</option>
+                                    <option value="Spanish">Spanish</option>
+                                    <option value="Japanese">Japanese</option>
+                                </NativeSelect>
+                            </FormControl>
+                        </Box>
+                    </div>
+
+                    <button className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md text-lg font-medium transition duration-300">
+                        Start your game
+                    </button>
                 </div>
 
-                <div className="">
-                    <h2 className="text-2xl">  Select what the teams and start playing your games</h2>
-                </div>
-            </div>
 
+
+
+                {/* Animated Icons */}
+                <div
+
+                    className="absolute bottom-20 left-8 text-5xl hidden lg:block"
+                >
+                    <FaBaseballBall style={{ color: colors[colorIndex] }} className="animate-bounce" />
+                </div>
+                <div
+                    className="absolute top-12 right-8 text-5xl hidden lg:block"
+                >
+                    <FaBaseballBall style={{ color: colors[(colorIndex + 2) % colors.length] }} className="animate-bounce" />
+                </div>
+            </main>
         </div>
     );
 };

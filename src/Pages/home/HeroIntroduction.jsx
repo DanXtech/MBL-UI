@@ -71,7 +71,7 @@ const HeroIntroduction = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.9 }}
-                        className="flex gap-4"
+                        className="flex gap-4 flex-col lg:flex-row "
                     >
                         <Link to="/register" className="px-8 py-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300">
                             Get Started
