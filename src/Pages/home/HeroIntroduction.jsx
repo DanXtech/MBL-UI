@@ -76,10 +76,11 @@ const HeroIntroduction = () => {
                         <Link to="/register" className="px-8 py-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300">
                             Get Started
                         </Link>
-                        <Link className="px-8 py-3 border border-gray-600 rounded-full text-white font-semibold hover:border-green-400 transition-all duration-300">
+                        <Link to="/features" className="px-8 py-3 border border-gray-600 rounded-full text-white font-semibold hover:border-green-400 transition-all duration-300">
                             Learn More
                         </Link>
                     </motion.div>
+
                 </div>
 
                 {/* Image section */}

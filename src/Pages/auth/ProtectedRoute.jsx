@@ -1,10 +1,14 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../../context/authContext";
-
+// src/components/ProtectedRoute.js
+import { Navigate } from 'react-router-dom';
+import { auth } from '../../firebase';
 
 const ProtectedRoute = ({ children }) => {
-    const { user } = useAuth();
-    return user ? children : <Navigate to="/login" />;
+    if (!auth.currentUser) {
+        // Redirect them to the login page if not authenticated
+        return <Navigate to="/login" replace />;
+    }
+
+    return children;
 };
 
 export default ProtectedRoute;

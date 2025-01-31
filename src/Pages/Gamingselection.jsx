@@ -6,12 +6,18 @@ import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import NativeSelect from "@mui/material/NativeSelect";
+import Modal from "@mui/material/Modal";
+import Button from "@mui/material/Button";
 import { FaBaseballBall } from "react-icons/fa";
 
 const GameSection = () => {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [colorIndex, setColorIndex] = useState(0);
+    const [team, setTeam] = useState("");
+    const [player, setPlayer] = useState("");
+    const [language, setLanguage] = useState("");
+    const [openModal, setOpenModal] = useState(false);
 
     const colors = ["#22c55e", "#3b82f6", "#eab308", "#ef4444", "#a855f7", "#f97316"];
 
@@ -23,11 +29,6 @@ const GameSection = () => {
         return () => clearInterval(interval);
     }, [colors.length]);
 
-
-    const [team, setTeam] = useState("");
-    const [player, setPlayer] = useState("");
-    const [language, setLanguage] = useState("");
-
     const handleLogout = async () => {
         try {
             await logout();
@@ -37,7 +38,13 @@ const GameSection = () => {
         }
     };
 
+    const handleStartGame = () => {
+        setOpenModal(true); // Open the modal
+    };
 
+    const handleCloseModal = () => {
+        setOpenModal(false); // Close the modal
+    };
 
     return (
         <div className="game-section min-h-screen bg-gray-100">
@@ -96,7 +103,6 @@ const GameSection = () => {
                                         id: "team-native",
                                         "aria-label": "Select favorite teams",
                                     }}
-
                                 >
                                     <option value="" disabled>
                                         Select favorite teams
@@ -163,24 +169,71 @@ const GameSection = () => {
                         </Box>
                     </div>
 
-                    <button className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md text-lg font-medium transition duration-300">
+                    <button
+                        onClick={handleStartGame}
+                        className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md text-lg font-medium transition duration-300"
+                    >
                         Start your game
                     </button>
                 </div>
 
+                {/* Modal */}
+
+                <Modal
+                    open={openModal}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-title"
+                    aria-describedby="modal-description"
+                >
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            width: 400,
+                            bgcolor: "background.paper",
+                            border: "2px solid #000",
+                            boxShadow: 24,
+                            p: 4,
+                        }}
+                    >
+                        <h2 id="modal-title" className="text-xl font-semibold mb-4">
+                            User Information
+                        </h2>
+                        <p className="text-gray-700 mb-2">
+                            <strong>Name:</strong> {user?.displayName || "Guest"}
+                        </p>
+                        <p className="text-gray-700 mb-2">
+                            <strong>Email:</strong> {user?.email || "Not Available"}
+                        </p>
+                        <p className="text-gray-700 mb-2">
+                            <strong>Favorite Team:</strong> {team || "Not Selected"}
+                        </p>
+                        <p className="text-gray-700 mb-2">
+                            <strong>Favorite Player:</strong> {player || "Not Selected"}
+                        </p>
+                        <p className="text-gray-700">
+                            <strong>Language:</strong> {language || "Not Selected"}
+                        </p>
+                        <Button
+                            onClick={handleCloseModal}
+                            className="mt-4"
+                            variant="contained"
+                            color="primary"
+                        >
+                            Close
+                        </Button>
+                    </Box>
+                </Modal>
 
 
 
                 {/* Animated Icons */}
-                <div
-
-                    className="absolute bottom-20 left-8 text-5xl hidden lg:block"
-                >
+                <div className="absolute bottom-20 left-8 text-5xl hidden lg:block">
                     <FaBaseballBall style={{ color: colors[colorIndex] }} className="animate-bounce" />
                 </div>
-                <div
-                    className="absolute top-12 right-8 text-5xl hidden lg:block"
-                >
+                <div className="absolute top-12 right-8 text-5xl hidden lg:block">
                     <FaBaseballBall style={{ color: colors[(colorIndex + 2) % colors.length] }} className="animate-bounce" />
                 </div>
             </main>

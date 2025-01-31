@@ -8,6 +8,8 @@ import Community from "../Pages/Community";
 import Gamingselection from "../Pages/Gamingselection";
 import NotFound from "../Pages/NotFound"; // Import a 404 page component
 import ProtectedRoute from "../Pages/auth/ProtectedRoute";
+import ScoreCard from "../Pages/ScoreCard";
+import CommentaryCard from "../Pages/Commentary";
 
 const router = createBrowserRouter([
     {
@@ -28,9 +30,9 @@ const router = createBrowserRouter([
     {
         path: "/playsection",
         element:
-            <ProtectedRoute>
-                <Gamingselection />
-            </ProtectedRoute>
+
+            <Gamingselection />
+
 
     },
     {
@@ -40,6 +42,14 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    },
+    {
+        path: "/score-card",
+        element: <ScoreCard />
+    },
+    {
+        path: "/commentary-card",
+        element: <CommentaryCard />
     },
     // Fallback route for 404 at the root level
     {

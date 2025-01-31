@@ -6,6 +6,7 @@ import HeroIntroduction from "./HeroIntroduction";
 import { Link } from "react-router-dom";
 import FeaturesSection from "./FeaturesSection";
 import UpcomingEventsSection from "./UpcomingEventsSection";
+import GetStarted from "../GetStarted";
 
 const HeroPage = () => {
     const parallaxRef = useRef(null);
@@ -37,6 +38,10 @@ const HeroPage = () => {
                         {/* First Section */}
                         <HeroIntroduction />
 
+
+                        <hr className="border-gray-500 my-8" />
+
+                        <GetStarted />
 
                         <hr className="border-gray-500 my-8" />
 

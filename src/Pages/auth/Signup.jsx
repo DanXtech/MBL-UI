@@ -1,27 +1,49 @@
 import AuthImage from "../../assets/Red-and-Black-Monogram-Sports-Baseball-Club-Logo.png";
 import Button from "../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/authContext";
-import { useEffect } from "react";
+import { signInWithPopup } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db, googleProvider } from "../../firebase";
+import { useEffect, useState } from "react";
 
 const Signup = () => {
-    const { signInWithGoogle, user } = useAuth();
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        if (user) {
-            navigate('/playsection');
-        }
-    }, [user, navigate]);
+        // Check if user is already logged in
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setUser(user);
+                navigate('/playsection');
+            }
+        });
+
+        return () => unsubscribe();
+    }, [navigate]);
 
     const handleGoogleSignIn = async () => {
         try {
-            await signInWithGoogle();
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+
+            // Save user data to Firestore
+            await setDoc(doc(db, "users", user.uid), {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                lastLogin: new Date().toISOString()
+            }, { merge: true });
+
+            // Navigate after successful sign in
+            navigate('/playsection');
         } catch (error) {
             console.error("Error signing in with Google:", error.message);
         }
     };
 
+    // Rest of your component remains the same
     return (
         <div
             style={{

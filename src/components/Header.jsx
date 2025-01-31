@@ -61,13 +61,6 @@ const Header = () => {
                         <HamburgerMenu />
                     </nav>
 
-
-                    <div className='hidden lg:block'>
-                        <Link to="/login" className="px-8 py-3 border border-gray-600 rounded-full text-white font-semibold hover:border-green-400 transition-all duration-300">
-                            Login
-                        </Link>
-                    </div>
-
                     <div className="flex items-center gap-4 ">
                         <Button
                             className="ml-auto lg:hidden"
