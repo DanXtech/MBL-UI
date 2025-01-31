@@ -2,30 +2,54 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/authContext";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo1.png";
+import DefaultImage from "../assets/image.png";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import NativeSelect from "@mui/material/NativeSelect";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-import { FaBaseballBall } from "react-icons/fa";
 
 const GameSection = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [colorIndex, setColorIndex] = useState(0);
     const [team, setTeam] = useState("");
     const [player, setPlayer] = useState("");
+    const [playerId, setPlayerId] = useState(null);
     const [language, setLanguage] = useState("");
     const [openModal, setOpenModal] = useState(false);
+    const [teamsList, setTeamsList] = useState([]);
+    const [playersList, setPlayersList] = useState([]);
+    const [loadingPlayers, setLoadingPlayers] = useState(false);
+    const [imageSrc, setImageSrc] = useState(DefaultImage);
+    const [error, setError] = useState("");
 
     const colors = ["#22c55e", "#3b82f6", "#eab308", "#ef4444", "#a855f7", "#f97316"];
+
+    // Fetch players when a team is selected
+    const fetchPlayers = async (teamId) => {
+        if (!teamId) return;
+
+        setLoadingPlayers(true);
+        try {
+            const response = await fetch(`http://127.0.0.1:8001/team_players/${teamId}`);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const data = await response.json();
+            setPlayersList(data.players || []);
+        } catch (err) {
+            setError("Failed to load players. Please try again.");
+            console.error("Error fetching players:", err);
+        } finally {
+            setLoadingPlayers(false);
+        }
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
             setColorIndex((prev) => (prev + 1) % colors.length);
-        }, 1000); // Change color every second
-
+        }, 1000);
         return () => clearInterval(interval);
     }, [colors.length]);
 
@@ -38,12 +62,44 @@ const GameSection = () => {
         }
     };
 
-    const handleStartGame = () => {
-        setOpenModal(true); // Open the modal
+    const handleStartGame = async () => {
+        if (!playerId) {
+            alert("Please select a player before starting the game.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://127.0.0.1:8001/player_id/${playerId}`);
+            if (!response.ok) throw new Error("Failed to fetch player image.");
+            const data = await response.json();
+
+            if (data.image_url) {
+                setImageSrc(data.image_url);
+            } else {
+                setImageSrc(DefaultImage);
+            }
+        } catch (err) {
+            console.error("Error fetching player image:", err);
+            setImageSrc(DefaultImage);
+        }
+
+        setOpenModal(true);
     };
 
     const handleCloseModal = () => {
-        setOpenModal(false); // Close the modal
+        setOpenModal(false);
+    };
+
+    const handleTeamChange = (e) => {
+        const teamId = parseInt(e.target.value, 10);
+        setTeam(teamId);
+        fetchPlayers(teamId);
+    };
+
+    const handlePlayerChange = (e) => {
+        const selectedPlayerId = e.target.value;
+        setPlayer(selectedPlayerId);
+        setPlayerId(selectedPlayerId);
     };
 
     return (
@@ -92,26 +148,14 @@ const GameSection = () => {
                         {/* Favorite Teams */}
                         <Box sx={{ m: 1, width: "100%" }}>
                             <FormControl fullWidth>
-                                <InputLabel variant="standard" htmlFor="team-native">
-                                    Select favorite teams
-                                </InputLabel>
-                                <NativeSelect
-                                    value={team}
-                                    onChange={(e) => setTeam(e.target.value)}
-                                    inputProps={{
-                                        name: "team",
-                                        id: "team-native",
-                                        "aria-label": "Select favorite teams",
-                                    }}
-                                >
-                                    <option value="" disabled>
-                                        Select favorite teams
-                                    </option>
-                                    <option value="Kevin De Bruyne">Kevin De Bruyne</option>
-                                    <option value="Rodri">Rodri</option>
-                                    <option value="Erling Haaland">Erling Haaland</option>
-                                    <option value="Mohamed Salah">Mohamed Salah</option>
-                                    <option value="Aaron Judge">Aaron Judge</option>
+                                <InputLabel variant="standard">Select favorite team</InputLabel>
+                                <NativeSelect value={team} onChange={handleTeamChange}>
+                                    <option value="" disabled>Select favorite team</option>
+                                    <option value="119">Kevin De Bruyne</option>
+                                    <option value="118">Rodri</option>
+                                    <option value="120">Erling Haaland</option>
+                                    <option value="102">Mohamed Salah</option>
+                                    <option value="100">Aaron Judge</option>
                                 </NativeSelect>
                             </FormControl>
                         </Box>
@@ -119,26 +163,18 @@ const GameSection = () => {
                         {/* Favorite Players */}
                         <Box sx={{ m: 1, width: "100%" }}>
                             <FormControl fullWidth>
-                                <InputLabel variant="standard" htmlFor="player-native">
-                                    Select favorite players
-                                </InputLabel>
-                                <NativeSelect
-                                    value={player}
-                                    onChange={(e) => setPlayer(e.target.value)}
-                                    inputProps={{
-                                        name: "player",
-                                        id: "player-native",
-                                        "aria-label": "Select favorite players",
-                                    }}
-                                >
-                                    <option value="" disabled>
-                                        Select favorite players
-                                    </option>
-                                    <option value="Player 1">Player 1</option>
-                                    <option value="Player 2">Player 2</option>
-                                    <option value="Player 3">Player 3</option>
-                                    <option value="Player 4">Player 4</option>
-                                    <option value="Player 5">Player 5</option>
+                                <InputLabel variant="standard">Select favorite player</InputLabel>
+                                <NativeSelect value={player} onChange={handlePlayerChange}>
+                                    <option value="" disabled>Select favorite player</option>
+                                    {loadingPlayers ? (
+                                        <option>Loading players...</option>
+                                    ) : playersList.length > 0 ? (
+                                        playersList.map((p) => (
+                                            <option key={p.id} value={p.id}>{p.fullName}</option>
+                                        ))
+                                    ) : (
+                                        <option>No players available</option>
+                                    )}
                                 </NativeSelect>
                             </FormControl>
                         </Box>
@@ -146,96 +182,31 @@ const GameSection = () => {
                         {/* Language */}
                         <Box sx={{ m: 1, width: "100%" }}>
                             <FormControl fullWidth>
-                                <InputLabel variant="standard" htmlFor="language-native">
-                                    Select a language
-                                </InputLabel>
-                                <NativeSelect
-                                    value={language}
-                                    onChange={(e) => setLanguage(e.target.value)}
-                                    inputProps={{
-                                        name: "language",
-                                        id: "language-native",
-                                        "aria-label": "Select a Language",
-                                    }}
-                                >
-                                    <option value="" disabled>
-                                        Select a language
-                                    </option>
+                                <InputLabel variant="standard">Select a language</InputLabel>
+                                <NativeSelect value={language} onChange={(e) => setLanguage(e.target.value)}>
+                                    <option value="" disabled>Select a language</option>
                                     <option value="English">English</option>
-                                    <option value="Spanish">Spanish</option>
-                                    <option value="Japanese">Japanese</option>
                                 </NativeSelect>
                             </FormControl>
                         </Box>
                     </div>
 
-                    <button
-                        onClick={handleStartGame}
-                        className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md text-lg font-medium transition duration-300"
-                    >
+                    <button onClick={handleStartGame} className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md text-lg font-medium transition duration-300">
                         Start your game
                     </button>
                 </div>
 
                 {/* Modal */}
-
-                <Modal
-                    open={openModal}
-                    onClose={handleCloseModal}
-                    aria-labelledby="modal-title"
-                    aria-describedby="modal-description"
-                >
-                    <Box
-                        sx={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            width: 400,
-                            bgcolor: "background.paper",
-                            border: "2px solid #000",
-                            boxShadow: 24,
-                            p: 4,
-                        }}
-                    >
-                        <h2 id="modal-title" className="text-xl font-semibold mb-4">
-                            User Information
-                        </h2>
-                        <p className="text-gray-700 mb-2">
-                            <strong>Name:</strong> {user?.displayName || "Guest"}
-                        </p>
-                        <p className="text-gray-700 mb-2">
-                            <strong>Email:</strong> {user?.email || "Not Available"}
-                        </p>
-                        <p className="text-gray-700 mb-2">
-                            <strong>Favorite Team:</strong> {team || "Not Selected"}
-                        </p>
-                        <p className="text-gray-700 mb-2">
-                            <strong>Favorite Player:</strong> {player || "Not Selected"}
-                        </p>
-                        <p className="text-gray-700">
-                            <strong>Language:</strong> {language || "Not Selected"}
-                        </p>
-                        <Button
-                            onClick={handleCloseModal}
-                            className="mt-4"
-                            variant="contained"
-                            color="primary"
-                        >
-                            Close
-                        </Button>
+                <Modal open={openModal} onClose={handleCloseModal}>
+                    <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 400, bgcolor: "background.paper", p: 4 }}>
+                        <h2>User Information</h2>
+                        <p><strong>Team:</strong> {team || "Not Selected"}</p>
+                        <p><strong>Player:</strong> {player || "Not Selected"}</p>
+                        <p><strong>Language:</strong> {language || "Not Selected"}</p>
+                        <img src={imageSrc} alt="Player" className="w-full mt-4 rounded-lg" />
+                        <Button onClick={handleCloseModal} variant="contained">Close</Button>
                     </Box>
                 </Modal>
-
-
-
-                {/* Animated Icons */}
-                <div className="absolute bottom-20 left-8 text-5xl hidden lg:block">
-                    <FaBaseballBall style={{ color: colors[colorIndex] }} className="animate-bounce" />
-                </div>
-                <div className="absolute top-12 right-8 text-5xl hidden lg:block">
-                    <FaBaseballBall style={{ color: colors[(colorIndex + 2) % colors.length] }} className="animate-bounce" />
-                </div>
             </main>
         </div>
     );
