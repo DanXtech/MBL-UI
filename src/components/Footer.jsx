@@ -88,7 +88,7 @@ const Footer = () => {
                         <ul className="space-y-2">
                             <li>
                                 <Link
-                                    to="/live-scores"
+                                    to="/score-card"
                                     className="hover:text-yellow-500 flex items-center"
                                 >
                                     <GiBaseballBat className="mr-2" /> Live
@@ -97,7 +97,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link
-                                    to="/player-stats"
+                                    to="/"
                                     className="hover:text-yellow-500 flex items-center"
                                 >
                                     Player Statistics
@@ -105,7 +105,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link
-                                    to="/insights"
+                                    to="/"
                                     className="hover:text-yellow-500 flex items-center"
                                 >
                                     Game Insights
@@ -122,7 +122,7 @@ const Footer = () => {
                         <ul className="space-y-2">
                             <li>
                                 <Link
-                                    to="/schedule"
+                                    to="/"
                                     className="hover:text-yellow-500"
                                 >
                                     Game Schedule
@@ -138,7 +138,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link
-                                    to="/highlights"
+                                    to="/"
                                     className="hover:text-yellow-500"
                                 >
                                     Video Highlights
@@ -153,7 +153,7 @@ const Footer = () => {
                         <ul className="space-y-2">
                             <li>
                                 <Link
-                                    to="/privacy"
+                                    to="/"
                                     className="hover:text-yellow-500"
                                 >
                                     Privacy Policy
@@ -161,7 +161,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link
-                                    to="/terms"
+                                    to="/"
                                     className="hover:text-yellow-500"
                                 >
                                     Terms of Service
@@ -169,7 +169,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link
-                                    to="/cookies"
+                                    to="/"
                                     className="hover:text-yellow-500"
                                 >
                                     Cookie Policy
